@@ -1,12 +1,360 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Hello World</title>
-  </head>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Popu Cast</title>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
 
-  <body>
-    <h1>Hello World</h1>
-  </body>
+        <style>
+            :root {
+                --bg: #0b0b0c;
+                --muted: #222228;
+                --card: #141418;
+                --text: #f4f6f8;
+                --sub: #a2a7b0;
+                --accent: #a420ff;
+                --ok: #d5ffb0;
+            }
+
+            * {
+                box-sizing: border-box;
+            }
+
+            body {
+                margin: 0;
+                font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+                background: var(--bg);
+                color: var(--text);
+            }
+
+            .container {
+                max-width: 680px;
+                margin: 0 auto;
+                padding: 20px 16px 56px;
+            }
+
+            .appbar {
+                background: var(--muted);
+                border-radius: 16px;
+                padding: 12px 14px;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+
+            .hamburger {
+                width: 22px;
+                height: 14px;
+                position: relative;
+            }
+
+            .hamburger span {
+                position: absolute;
+                left: 0;
+                right: 0;
+                height: 2px;
+                background: #fff;
+                border-radius: 2px;
+            }
+
+            .hamburger span:nth-child(1) {
+                top: 0
+            }
+
+            .hamburger span:nth-child(2) {
+                top: 6px
+            }
+
+            .hamburger span:nth-child(3) {
+                bottom: 0
+            }
+
+            .moon {
+                margin-left: auto;
+                width: 22px;
+                height: 22px;
+                border: 2px solid #fff;
+                border-radius: 50%;
+                box-shadow: -6px 0 0 0 var(--bg) inset;
+            }
+
+            h1 {
+                text-align: center;
+                margin: 28px 0 18px;
+                font-weight: 700;
+                letter-spacing: .3px;
+            }
+
+            .card {
+                background: var(--card);
+                border: 1px solid #1f1f25;
+                border-radius: 18px;
+                padding: 16px;
+            }
+
+            label {
+                display: block;
+                font-size: 12px;
+                color: var(--sub);
+                margin: 10px 2px 6px;
+            }
+
+            input,
+            select {
+                width: 100%;
+                background: #0f0f13;
+                color: #fff;
+                border: 1px solid #23232a;
+                border-radius: 12px;
+                padding: 12px 12px;
+                font-size: 14px;
+                outline: none;
+            }
+
+            input:focus,
+            select:focus {
+                border-color: var(--accent);
+                box-shadow: 0 0 0 4px rgba(164, 32, 255, .15);
+            }
+
+            .row {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 12px;
+            }
+
+            .btn {
+                width: 100%;
+                padding: 14px 16px;
+                border-radius: 999px;
+                border: 1px solid #2a2a33;
+                background: var(--accent);
+                color: #fff;
+                font-weight: 700;
+                font-size: 15px;
+                cursor: pointer;
+                margin-top: 16px;
+            }
+
+            .btn:disabled {
+                opacity: .6;
+                cursor: not-allowed;
+            }
+
+            .result {
+                display: flex;
+                flex-direction: column;
+                gap: 14px;
+                margin: 20px 0 0;
+            }
+
+            .final-result {
+                display: flex;
+                align-items: center;
+                gap: 14px;
+            }       
+
+            .avatar {
+                width: 56px;
+                height: 56px;
+                border-radius: 50%;
+                border: 2px dashed #3a3a44;
+                display: grid;
+                place-items: center;
+            }
+
+            .arrow {
+                font-size: 20px;
+                color: var(--ok);
+            }
+
+            .big {
+                font-size: 28px;
+                font-weight: 800;
+                letter-spacing: .3px;
+            }
+
+            .muted {
+                color: var(--sub);
+                font-size: 12px;
+            }
+
+            .hint {
+                font-size: 12px;
+                color: var(--sub);
+                margin-top: 10px;
+            }
+
+            .footer {
+                text-align: center;
+                color: var(--sub);
+                font-size: 12px;
+                margin-top: 30px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="appbar">
+                <div class="hamburger" aria-hidden="true"><span></span><span></span><span></span></div>
+                <div style="font-weight:700;">PopuCast</div>
+            </div>
+            <h1>Predict Population</h1>
+            <div class="card">
+                <div class="row">
+                    <div><label>Initial Population (P0)</label><input id="P0" type="number" min="0" value="1000000" /></div>
+                    <div><label>Years</label><input id="years" type="number" min="1" value="10" /></div>
+                </div>
+                <div class="row">
+                    <div><label>Birth rate (b, per capita / year)</label><input id="b" type="number" step="0.0001" value="0.020" /></div>
+                    <div><label>Death rate (d, per capita / year)</label><input id="d" type="number" step="0.0001" value="0.010" /></div>
+                </div>
+                <div class="row">
+                    <div><label>Immigrants per year (I, absolute)</label><input id="I" type="number" step="1" value="1500" /></div>
+                    <div><label>Emigrants per year (E, absolute)</label><input id="E" type="number" step="1" value="800" /></div>
+                </div>
+                <div class="row">
+                    <div><label>Carrying capacity K (optional → logistic)</label><input id="K" type="number" min="0" placeholder="Leave empty for exponential" /></div>
+                    <div><label>Integration steps</label><input id="steps" type="number" min="50" value="1000" /></div>
+                </div><button id="calc" class="btn">Calculate</button>
+                <div class="hint">Notes: <b>b</b> & <b>d</b> are rates per capita per year; <b>I</b> & <b>E</b> are absolute counts per year. Logistic growth is used when K is provided; otherwise exponential.</div>
+                <div class="result" id="result" style="display:none;">
+                    <div><label>Result:</label></div>
+                    <div class="final-result">
+                        <div class="avatar">👤</div>
+                        <div>
+                            <div class="big" id="final">0</div>
+                            <div class="muted" id="subtitle">Result</div>
+                        </div>
+                        <div class="arrow"></div>
+                    </div>   
+                    <canvas id="population-line-chart" style="width:100%;max-width:700px;"></canvas>
+                </div>
+            </div>
+            <div class="footer">© Population Predictor • demo</div>
+        </div>
+        <script>  
+            
+            const ctx = document.getElementById('population-line-chart').getContext('2d');
+    
+            function formatID(num) {
+                // Format number with dot thousands (e.g., 6.000.250)
+                return new Intl.NumberFormat('id-ID').format(num);
+            }
+            function addYearsToDate(originalDate, yearsToAdd) {
+				// Create a new Date object from the original to avoid modifying it directly
+				const newDate = new Date(originalDate.getTime());
+				
+				// Calculate the number of milliseconds in the given years.
+				// This is an approximation as it doesn't account for leap years precisely.
+				// For more precision with leap years, a library like date-fns or Moment.js is recommended.
+				const millisecondsInYear = 365.25 * 24 * 60 * 60 * 1000;
+				const millisecondsToAdd = yearsToAdd * millisecondsInYear;
+				
+				// Add the calculated milliseconds to the new date's timestamp
+				newDate.setTime(newDate.getTime() + millisecondsToAdd);
+				
+				return newDate;
+			}
+
+            async function predict() {
+                const btn = document.getElementById('calc');
+                btn.disabled = true;
+                btn.textContent = 'Calculating…';
+                const payload = {
+                    P0: parseInt(document.getElementById('P0').value || '0'),
+                    years: parseFloat(document.getElementById('years').value || '1'),
+                    b: parseFloat(document.getElementById('b').value || '0'),
+                    d: parseFloat(document.getElementById('d').value || '0'),
+                    I: parseFloat(document.getElementById('I').value || '0'),
+                    E: parseFloat(document.getElementById('E').value || '0'),
+                    steps: parseInt(document.getElementById('steps').value || '1000', 10),
+                };
+                const Kval = document.getElementById('K').value;
+                if (Kval !== '') payload.K = parseFloat(Kval);
+                try {
+                    const res = await fetch('/api/predict', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(payload)
+                    });
+                    if (!res.ok) throw new Error('Request failed');
+                    const data = await res.json();
+
+                
+                    const xValues = data.t.map(yearsDelta => addYearsToDate(new Date(), yearsDelta).toLocaleDateString('en-US', {year: 'numeric', month: 'long', day: 'numeric'}));
+		            const yValues = data.P;
+
+				    const chartData = {
+				        labels: xValues,
+				        datasets: [{
+				            label: 'Population',
+				            data: yValues,
+				            borderColor: '#a420ff',
+				            fill: false
+				        }]
+				    };	
+				    const options = {
+				        responsive: true,
+				        plugins: {
+				            legend: {
+				                position: 'top',
+				            },
+				            title: {
+				                display: true,
+				                text: 'Population Chart'
+				            }
+				        },
+                        scales: {
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: "Year"
+                                }
+                            },
+                            xAxes: [{
+		              		    ticks: {
+				                    // Shorthand the millions
+				                    callback: function(value, index, values) {  
+                                        if (!(index % 2 == 0)) {
+                                            return undefined;
+                                        } 
+				                        return value.split(' ')[2];
+				                    }
+				                }
+				            }],
+                            y: {
+                                title: {
+                                    display: true,
+                                    text: "Population"
+                                }
+
+                            }
+                        }
+				    };
+                    const PopulationLineChart = new Chart(ctx, {
+                        type: 'line',
+                        data: chartData,
+                        options: options
+                    });
+
+
+                    const finalEl = document.getElementById('final');
+                    const subEl = document.getElementById('subtitle');
+                    finalEl.textContent = formatID(Math.round(data.P_final));
+                    subEl.textContent = `Population after ${payload.years} year(s)`;
+                    document.getElementById('result').style.display = 'flex';
+                } catch (err) {
+                    alert('Error: ' + err.message);
+                } finally {
+                    btn.disabled = false;
+                    btn.textContent = 'Calculate';
+                }
+            }
+            document.getElementById('calc').addEventListener('click', predict);
+        </script>
+    </body>
 </html>
