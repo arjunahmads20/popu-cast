@@ -1,7 +1,86 @@
-# Flask Web App Starter
+# ðŸ“Š Population Predictor
 
-A Flask starter template as per [these docs](https://flask.palletsprojects.com/en/3.0.x/quickstart/#a-minimal-application).
+A simple **Flask-based web app** to simulate and predict population growth using both **exponential** and **logistic models**.
 
-## Getting Started
+The app provides a **one-page UI** with clean minimal design where users can input:
 
-Previews should run automatically when starting a workspace.
+- Initial population (**Pâ‚€**)
+- Time horizon (**years**)
+- Birth rate (**b**, per capita per year)
+- Death rate (**d**, per capita per year)
+- Immigration (**I**, absolute per year)
+- Emigration (**E**, absolute per year)
+- Carrying capacity (**K**, optional â†’ logistic model if provided)
+
+---
+
+## ðŸš€ Features
+- One-page responsive UI (HTML + CSS + JS embedded in Flask)
+- REST API endpoint (`/api/predict`) returning JSON result
+- Two growth models: **Exponential** (default) & **Logistic** (when K provided)
+- Results displayed in numeric format (with locale thousands separator)
+- Minimal dependencies (just `Flask`)
+
+---
+
+## ðŸ› ï¸ Tech Stack
+- **Backend**: Python + Flask
+- **Frontend**: HTML, CSS, Vanilla JS (single-page embedded)
+
+---
+
+## ðŸ”§ Installation & Usage
+
+Clone the repository:
+```bash
+git clone https://github.com/your-username/population-predictor.git
+cd population-predictor
+```
+
+Install dependencies:
+```bash
+pip install flask
+```
+
+Run the server:
+```bash
+python app.py
+```
+
+Open your browser at [http://localhost:5000](http://localhost:5000).
+
+---
+
+## ðŸ“¡ API Usage
+
+Endpoint: `POST /api/predict`
+
+Request body (JSON):
+```json
+{
+  "P0": 1000000,
+  "years": 20,
+  "b": 0.03,
+  "d": 0.01,
+  "I": 1200,
+  "E": 500,
+  "K": 5000000,
+  "steps": 1000
+}
+```
+
+Response body (JSON):
+```json
+{
+  "t": [0, 0.02, 0.04, ...],
+  "P": [1000000.0, 1003200.0, ...],
+  "P_final": 1345200.55,
+  "model": "logistic"
+}
+```
+
+---
+
+## ðŸ“œ License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
