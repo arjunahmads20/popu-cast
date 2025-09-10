@@ -1,10 +1,10 @@
-# ðŸ“Š Population Predictor
+# Popu Cast (Population Predictor)
 
 A simple **Flask-based web app** to simulate and predict population growth using both **exponential** and **logistic models**.
 
 The app provides a **one-page UI** with clean minimal design where users can input:
 
-- Initial population (**Pâ‚€**)
+- Initial population (**P0**)
 - Time horizon (**years**)
 - Birth rate (**b**, per capita per year)
 - Death rate (**d**, per capita per year)
@@ -14,27 +14,26 @@ The app provides a **one-page UI** with clean minimal design where users can inp
 
 ---
 
-## ðŸš€ Features
+## Features
 - One-page responsive UI (HTML + CSS + JS embedded in Flask)
 - REST API endpoint (`/api/predict`) returning JSON result
 - Two growth models: **Exponential** (default) & **Logistic** (when K provided)
-- Results displayed in numeric format (with locale thousands separator)
-- Minimal dependencies (just `Flask`)
+- Results displayed in numeric format (with locale thousands separator) and Chart
 
 ---
 
-## ðŸ› ï¸ Tech Stack
+## Tech Stack
 - **Backend**: Python + Flask
 - **Frontend**: HTML, CSS, Vanilla JS (single-page embedded)
 
 ---
 
-## ðŸ”§ Installation & Usage
+## ðInstallation & Usage
 
 Clone the repository:
 ```bash
-git clone https://github.com/your-username/population-predictor.git
-cd population-predictor
+git clone https://github.com/arjunahmads20/popu-cast.git
+cd popu-cast
 ```
 
 Install dependencies:
@@ -51,7 +50,7 @@ Open your browser at [http://localhost:5000](http://localhost:5000).
 
 ---
 
-## ðŸ“¡ API Usage
+## API Usage
 
 Endpoint: `POST /api/predict`
 
@@ -78,9 +77,3 @@ Response body (JSON):
   "model": "logistic"
 }
 ```
-
----
-
-## ðŸ“œ License
-
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
