@@ -28,7 +28,7 @@ The app provides a **one-page UI** with clean minimal design where users can inp
 
 ---
 
-## ðInstallation & Usage
+## Installation & Usage
 
 Clone the repository:
 ```bash
