@@ -15,16 +15,8 @@ The app provides a **one-page UI** with clean minimal design where users can inp
 ---
 
 ## Features
-- One-page responsive UI (HTML + CSS + JS embedded in Flask)
-- REST API endpoint (`/api/predict`) returning JSON result
 - Two growth models: **Exponential** (default) & **Logistic** (when K provided)
 - Results displayed in numeric format (with locale thousands separator) and chart
-
----
-
-## Tech Stack
-- **Backend**: Python + Flask
-- **Frontend**: HTML, CSS, Vanilla JS (single-page embedded)
 
 ---
 
